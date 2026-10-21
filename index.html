@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5.0">
+<title>LFAI Registry — GUI·ADB 자동화 레지스트리</title>
+<meta name="description" content="박씨 생태계의 모든 GUI·ADB·에이전트 자동화 전수 카탈로그 + 오픈소스 빌드블록 리서치. 사람이 시키면 에이전트가 GUI를 대신 수행하는 솔루션의 기반.">
+<meta name="theme-color" content="#06070c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%2306070c%22/%3E%3Ctext%20x%3D%2232%22%20y%3D%2244%22%20font-family%3D%22monospace%22%20font-size%3D%2230%22%20font-weight%3D%22700%22%20fill%3D%22%23d4af37%22%20text-anchor%3D%22middle%22%3EL%3C/text%3E%3C/svg%3E">
+<meta property="og:type" content="website"><meta property="og:title" content="LFAI Registry — 자동화 레지스트리">
+<meta property="og:description" content="GUI·ADB·에이전트 자동화 전수 카탈로그 + 오픈소스 스택.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@latest/dist/web/variable/pretendardvariable.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:ital@0;1&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#07070d;--bg2:#0b0b14;--panel:#101019;--line:rgba(255,255,255,.07);
+--ink:#f0e8d8;--dim:rgba(240,232,216,.55);--muted:rgba(240,232,216,.32);
+--gold:#d4af37;--cyan:#22d3ee;--purple:#a855f7;--green:#4ade80;--blue:#60a5fa;--orange:#fb923c;--rose:#f472b6;
+--grad:linear-gradient(135deg,#d4af37,#fb923c 55%,#f472b6);}
+html{scroll-behavior:smooth}
+body{font-family:'Pretendard Variable','Noto Sans KR',sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.aurora{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.aurora i{position:absolute;border-radius:50%;filter:blur(120px);opacity:.14}
+.aurora .a{width:520px;height:520px;top:-160px;left:-120px;background:radial-gradient(circle,var(--gold),transparent 70%)}
+.aurora .b{width:460px;height:460px;top:40%;right:-160px;background:radial-gradient(circle,var(--cyan),transparent 70%)}
+.aurora .c{width:420px;height:420px;bottom:-140px;left:20%;background:radial-gradient(circle,var(--purple),transparent 70%)}
+.wrap{width:100%;max-width:1060px;margin:0 auto;padding:0 24px}
+.nav{position:sticky;top:0;z-index:50;background:rgba(7,7,13,.8);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:58px}
+.brand{font-family:'JetBrains Mono';font-weight:700;letter-spacing:.14em;color:var(--gold);font-size:14px}
+.nav a.gh{font-family:'JetBrains Mono';font-size:12.5px;color:var(--dim);border:1px solid var(--line);padding:7px 14px;border-radius:8px;text-decoration:none;transition:.2s}
+.nav a.gh:hover{border-color:var(--gold);color:var(--gold)}
+.eyebrow{font-family:'JetBrains Mono';font-size:11px;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--gold)}
+.hero{padding:70px 0 34px}
+.hero .eyebrow{display:block;margin-bottom:16px}
+.hero h1{font-size:clamp(32px,5.6vw,58px);line-height:1.12;font-weight:900;letter-spacing:-.02em;margin-bottom:20px}
+.hero h1 .g{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero h1 em{font-family:'Playfair Display';font-style:italic;font-weight:400;color:var(--gold)}
+.hero .lead{font-size:clamp(15px,2vw,19px);color:var(--dim);max-width:720px}
+.hero .lead b{color:var(--ink)}
+.btns{display:flex;gap:13px;margin-top:30px;flex-wrap:wrap}
+.btn{padding:13px 24px;border-radius:10px;font-weight:800;font-size:14.5px;transition:.25s;text-decoration:none;display:inline-block}
+.btn.p{background:var(--gold);color:#120d02}.btn.p:hover{box-shadow:0 0 28px rgba(212,175,55,.4)}
+.btn.s{border:1px solid var(--line);color:var(--ink)}.btn.s:hover{border-color:var(--gold);color:var(--gold)}
+.hero .note{margin-top:22px;font-size:12.5px;color:var(--muted);font-family:'JetBrains Mono'}
+.stats{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg2)}
+.stats .wrap{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:30px 24px}
+.stat{text-align:center;padding:6px}
+.stat .n{font-family:'Inter';font-weight:900;font-size:clamp(22px,3.2vw,34px);color:#fff;letter-spacing:-.02em}
+.stat .n b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat .l{font-size:11.5px;color:var(--dim);margin-top:4px}
+.sec{padding:76px 0;border-bottom:1px solid var(--line)}
+.sec h2{font-size:clamp(24px,3.4vw,36px);font-weight:900;letter-spacing:-.02em;margin:12px 0 10px}
+.sec h2 .g{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sec .sub{color:var(--dim);max-width:700px;margin-bottom:28px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;transition:.25s}
+.card:hover{border-color:var(--c,var(--gold));transform:translateY(-3px)}
+.card .t{font-family:'JetBrains Mono';font-size:12px;color:var(--c,var(--gold));font-weight:700;letter-spacing:.04em}
+.card h3{font-size:17px;font-weight:800;margin:7px 0 6px}
+.card p{font-size:13.5px;color:var(--dim)}
+.card .meta{font-family:'JetBrains Mono';font-size:11px;color:var(--muted);margin-top:10px}
+.legal{background:linear-gradient(160deg,rgba(248,113,113,.08),var(--panel));border:1px solid rgba(248,113,113,.25);border-radius:16px;padding:26px}
+.legal .t{font-family:'JetBrains Mono';font-size:12px;color:var(--rose);letter-spacing:.1em}
+.legal h3{font-size:20px;font-weight:900;margin:8px 0 10px}
+.legal p{color:var(--dim);font-size:14.5px;margin-bottom:8px}
+.legal b{color:var(--ink)}
+.legal .ok{color:var(--green)}
+.foot{padding:40px 0;text-align:center;color:var(--muted);font-family:'JetBrains Mono';font-size:12px;line-height:2}
+.foot a{color:var(--cyan);text-decoration:none}
+.reveal{opacity:0;transform:translateY(22px);transition:.7s}.reveal.in{opacity:1;transform:none}
+@media(max-width:640px){.stats .wrap{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="aurora"><i class="a"></i><i class="b"></i><i class="c"></i></div>
+
+<nav class="nav"><div class="wrap">
+  <span class="brand">LFAI · REGISTRY</span>
+  <a class="gh" href="https://github.com/dtslib1979/lfai-registry" target="_blank" rel="noopener">GitHub ↗</a>
+</div></nav>
+
+<!-- HERO -->
+<header class="hero"><div class="wrap">
+  <span class="eyebrow">Automation Registry</span>
+  <h1>사람이 시키면,<br><span class="g">에이전트</span>가 <em>대신 한다</em></h1>
+  <p class="lead">폰·PC의 모든 <b>GUI 작업</b>을 자동화한 전수 카탈로그와, 같은 일을 하는 <b>오픈소스 빌드블록</b>을 한곳에 모았습니다. ADB·CDP·에이전트형 — 루팅 없이, 비개발자가 말로 지시하는 자동화의 기반.</p>
+  <div class="btns">
+    <a href="https://github.com/dtslib1979/lfai-registry/blob/main/REGISTRY.md" class="btn p" target="_blank" rel="noopener">자동화 카탈로그</a>
+    <a href="https://github.com/dtslib1979/lfai-registry/blob/main/RESEARCH.md" class="btn s" target="_blank" rel="noopener">오픈소스 스택</a>
+  </div>
+  <div class="note">// 비루트 ADB · CDP 실기기 · 에이전트형 웹 · 전부 MCP로 래핑</div>
+</div></header>
+
+<!-- STATS -->
+<section class="stats"><div class="wrap">
+  <div class="stat"><div class="n"><b>11</b></div><div class="l">자동화 종</div></div>
+  <div class="stat"><div class="n"><b>4</b></div><div class="l">방식 (ADB·CDP·웹·API)</div></div>
+  <div class="stat"><div class="n"><b>3</b></div><div class="l">OSS 엔진</div></div>
+  <div class="stat"><div class="n"><b>0</b></div><div class="l">루팅 · 워런티 훼손</div></div>
+  <div class="stat"><div class="n"><b>89</b>%</div><div class="l">최고 OSS 성공률</div></div>
+</div></section>
+
+<!-- 자동화 카탈로그 -->
+<section class="sec reveal"><div class="wrap">
+  <span class="eyebrow">01 · Registry</span>
+  <h2>내가 만든 <span class="g">자동화</span> 전수</h2>
+  <p class="sub">실제로 돌아간 것만. 대상·방식·상태·위치·핵심기법까지 전부 기록.</p>
+  <div class="grid">
+    <div class="card" style="--c:var(--green)"><div class="t">ADB · 비루트</div><h3>그리기 어시스트 MCP</h3><p>uiautomator 덤프→중심좌표, 격리앨범. 삼성 그리기 어시스트 7툴.</p><div class="meta">parksy-gallery · Tab S9</div></div>
+    <div class="card" style="--c:var(--green)"><div class="t">ADB</div><h3>네이버 로그인·발행</h3><p>실터치 E2E 완주 + 쿠키 추출.</p><div class="meta">2026-08-27</div></div>
+    <div class="card" style="--c:var(--cyan)"><div class="t">CDP</div><h3>실기기 크롬 제어</h3><p>ADB+CDP scrollTop — 데이터센터 IP 차단 우회, 장편 무제한.</p><div class="meta">chrome_cdp · device-cdp</div></div>
+    <div class="card" style="--c:var(--blue)"><div class="t">Web · Playwright</div><h3>티스토리 자동 발행</h3><p>TinyMCE setContent, HTML 단행본 레이아웃.</p><div class="meta">개발일지 060</div></div>
+    <div class="card" style="--c:var(--purple)"><div class="t">Client API</div><h3>인스타 캐러셀 발행</h3><p>instagrapi 세션·album_upload (ban 리스크 메모).</p><div class="meta">login/post/renderer</div></div>
+    <div class="card" style="--c:var(--orange)"><div class="t">Infra · Guard</div><h3>jail · phonerec · watchdog</h3><p>에이전트 격리, 화면녹화, ADB 상시감시.</p><div class="meta">mcp_jail · mcp_phonerec</div></div>
+  </div>
+</div></section>
+
+<!-- 오픈소스 스택 -->
+<section class="sec reveal"><div class="wrap">
+  <span class="eyebrow">02 · Open-Source Stack</span>
+  <h2>커뮤니티 <span class="g">빌드블록</span></h2>
+  <p class="sub">같은 일을 하는 오픈소스를 다 뒤져 고른 엔진. 내 자산과 바로 연결된다.</p>
+  <div class="grid">
+    <div class="card" style="--c:var(--gold)"><div class="t">웹 · MIT ★</div><h3>Browser Use</h3><p>OSS 최고 89% · DOM+CDP 직접 제어. 내 CDP 방식 그대로 + 상업 자유.</p><div class="meta">범용 엔진 1순위</div></div>
+    <div class="card" style="--c:var(--rose)"><div class="t">웹 · AGPL</div><h3>Skyvern</h3><p>폼·다단계 신청서 작성 1위. 전자소송·민원 폼에 최적.</p><div class="meta">상업화 시 라이선스 주의</div></div>
+    <div class="card" style="--c:var(--green)"><div class="t">모바일 ★</div><h3>uiautomator2</h3><p>내 raw ADB의 정식 파이썬판. 비루트·시스템앱. 바로 이식 → 코드 10배 단순.</p><div class="meta">openatx</div></div>
+    <div class="card" style="--c:var(--blue)"><div class="t">RPA</div><h3>Robot Framework</h3><p>키워드 기반, 파이썬 연동. 비개발자 보조.</p><div class="meta">rpaframework</div></div>
+  </div>
+</div></section>
+
+<!-- 전자소송 합법 설계 -->
+<section class="sec reveal"><div class="wrap">
+  <span class="eyebrow">03 · Compliance</span>
+  <h2>전자소송은 <span class="g">이 선</span>만 지키면 된다</h2>
+  <p class="sub">정부 전자소송은 폐쇄계라 전용 오픈소스가 없다. 그리고 '대행'은 법적 지뢰다.</p>
+  <div class="legal">
+    <div class="t">⚠ LEGAL</div>
+    <h3>'대행'이 아니라 '셀프 + 면허 첨삭'</h3>
+    <p><b>남의 소장을 대신 작성·제출(대행) + 보수</b> = 변호사법/법무사법 리스크.</p>
+    <p class="ok"><b>안전:</b> ① 본인이 직접 하도록 돕는 <b>셀프 자동화 툴/교재</b>(대행 아님) ② 또는 <b>변호사·법무사 제휴</b>(면허자가 주체, 엔진만 공급) — 상용 "어니언"식(AI 소장 + 변호사 첨삭).</p>
+  </div>
+</div></section>
+
+<section class="foot"><div class="wrap">
+  LFAI Registry · 기능인 박씨 · 2026<br>
+  <a href="https://github.com/dtslib1979/lfai-registry" target="_blank" rel="noopener">github.com/dtslib1979/lfai-registry</a>
+</div></section>
+
+<script>
+var io=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}})},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
+</script>
+</body>
+</html>
